@@ -1,5 +1,151 @@
-<p>This is the tareas view.</p>
+<p>Tareas Hernan Medina.</p>
 <pre>
-  test
+  1. Create a NodeJS script that will do the following:
+• Download and Image from S3.
+• Check if the metadata key “Move” of the image is true.
+• If true, upload the image to s3://cc116-assignment3/{MATRICULA}/ image.png • 20 points.
 
+	En S3Helper
+	/**
+ * Created by hernan on 9/3/16.
+ */
+var AWS = require("aws-sdk");
+var s3 = new AWS.S3();
+var fs = require("fs");
+module.exports.saveInS3 = function(bucket, key, content, callback){
+  var params = {
+    Bucket: bucket,
+    Key: key,
+    Body: content,
+    ACL: "public-read",
+    Metadata: {Move: "true"}
+  };
+  s3.upload(params, function(error, data){
+    if(error){
+      callback(error);
+    }
+    else{
+      callback(null, data);
+      console.log('almost there');
+    }
+  });
+};
+module.exports.readFromS3 = function(bucket, key, callback){
+  var params = {
+    Bucket: bucket,
+    Key: key
+  };
+  s3.getObject(params, function(error, data){
+    if(error){
+      callback(error);
+    }
+    else {
+      callback(null, data);
+    }
+  });
+};
+module.exports.downloadPhoto = function(bucket, key, stream){
+  var params = {
+    Bucket: bucket,
+    Key: key
+  };
+  var file = fs.createWriteStream(stream);
+  s3.getObject(params).createReadStream().pipe(file);
+};
+
+
+
+En el archivo principal
+
+var fs = require('fs'),
+  request = require('request');
+var async = require("async");
+var s3Helper = require("./S3Helper");
+var async = require("async");
+function getPic() {
+s3Helper.readFromS3('mexicoder656', 'beach.jpg' , function(error, data){
+  if (error) {
+    console.log(error);
+  }
+  else {
+    if(data.Metadata.move == 'true'){
+    console.log('yes');
+      s3Helper.downloadPhoto('mexicoder656', 'beach.jpg', 'beach.jpg')
+      var pic = fs.createReadStream('beach.jpg');
+      s3Helper.saveInS3('cc116-assignment','beach.jpg', pic, function (error,data) {
+        if (error) {
+          callback(error);
+        }
+        else {
+          console.log('MEGAYES');
+          callback(data);
+        }
+      });
+    }else{
+      console.log('no')
+    }
+  }
+  });
+}
+getPic();
+
+
+Hecho con la ayuda de Ruth Celiceo :)
+
+2. Create a NodeJS script that will do the following:
+• Will get the Nasa Astronomic Picture of the day.
+• Save the image in the local file system.
+• Print the title of the image. • 20 points.
+Este tambien fue hecho con ayuda de Ruth
+
+function spacePic() {
+  var url = "https://api.nasa.gov/planetary/apod?api_key=e9scqzaAGOPJWs8PCcoH1jNlT9ShmElqw9LV4BqU";
+  var writeStr = fs.createWriteStream('pic.jpg');
+  var params = {
+    url: url,
+    json: 'true'
+  };
+  request(params, function(err, opt, callback){
+    if(err){
+      console.log(err);
+    }
+    else{
+      request(callback.url).pipe(writeStr);
+      console.log(callback.title);
+      console.log(callback.date);
+      console.log(callback.url);
+    }
+  });
+}
+
+
+3. Implement Google Analytics in your personal web site (All teams will do the same for their Final Project). 20 points.
+  creas tu cuenta de Google analytics, se pone este script en la pagina a la cual quieres hacerle track y pones el codigo de tu pagina en 'create', UA-...
+	script>
+  		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-83604667-1', 'auto');
+      ga('send', 'pageview');
+
+	script>
+
+4. Read and explain the following article by Martin Fowler: http://martinfowler.com/ articles/richardsonMaturityModel.html. 20 points
+
+El articulo habla de los diferentes niveles de REST y como se clasifican.
+  El nivel 0 puede cer considerado el nivel de consultas basicas, donde solo se obtiene la informacion requerida sin muchos detalles de la misma.
+  En el nivel 1 igual se pueden hacer peticiones basicas a un servidor pero este te trae mas detalles y mejro performance.
+  El nivel 2 trae los verbos de HTTP tales como el GET, POST, PUT que se pueden utilizar para distintas tareas en web.
+  El nivel 3 ayuda a los desarrolladores o clientes seguir el proceso del codigo para asi ir descubriendo los procesos que hace el programa en si.
+
+5. Explain why cloud computing is important. 10 points.
+
+	Cloud computing te permite automatizar y facilitar distintas tareas que no quieres ejecutar en tu 	computadora o si no quieres tener tus servidores propios te da una alternativa mas barata y 	sencilla. Otro punto importante de cloud computing es que te facilita la utilización de 	microservices para mejorar el funcionamiento de tu programa.
+
+6. Explain what would like to change in this class and why. 10 points.
+
+	Coding... to... fast...
+	Bueno, no es tanto un problema para mi pero hay veces que si me toma un rato para entender que es lo que está pasando pero con el hecho de preguntar todo se soluciona, asi que todo bien
 </pre>
