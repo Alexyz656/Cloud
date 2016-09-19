@@ -1,4 +1,161 @@
 <p>Tareas Hernan Medina.</p>
+<h2>Tarea 4 En equipo con Ruth Celiceo</h2>
+<pre>
+  1. Implement the merge sort algorithm On-Prem with an integer array of 1,000,000
+elements. 20 points.
+
+var array =[];
+
+for(var i = 0; i &lt 1000000; i++){
+    array.push(Math.round(Math.random() * 1000));
+}
+
+console.log("The initial array is: " + array);
+var sortedArray = mergeSort(array);
+console.log("The sorted array is: " + sortedArray);
+
+function mergeSort(arr){
+    if(arr.length &lt 2){
+        return arr;
+    }
+
+    var middle = Math.floor(arr.length / 2);
+    var left = arr.slice(0, middle);
+    var right = arr.slice(middle, arr.length);
+
+    return merge(mergeSort(left), mergeSort(right));
+}
+
+function merge(left, right){
+    var resultArray = [];
+    var indxLft = 0;
+    var indxRght = 0;
+
+    while(indxLft &lt left.length && indxRght &lt right.length){
+        if(left[0] &lt= right[0]){
+            resultArray.push(left.shift());
+        }
+        else{
+            resultArray.push(right.shift());
+        }
+    }
+
+    while(left.length){
+        resultArray.push(left.shift());
+    }
+    while(right.length){
+        resultArray.push(right.shift());
+    }
+
+    return resultArray;
+}
+
+2. Benchmark the On-Prem implementation. 10 points.
+  Implementation with 1,000,000 numbers = 6 minutes 42 seconds
+
+3. Implement the merge sort algorithm with an integer array of 1,000,000 in a parallel
+approach using micro-services architecture in AWS. 60 points.
+
+Creamos un API Geatway llamado HRMergeSort, en donde tenemos dos lambdas llamadas HRMerge y HRDivide.
+
+event.json de HRMerge
+
+  {
+  "left":[],
+  "right":[]
+}
+HRMerge
+
+  'use strict';
+
+module.exports.handler = function(event, context, cb) {
+  function merge(){
+    var resultArray = [];
+    var indxLft = 0;
+    var indxRght = 0;
+    //var left2 = event[0];
+    //var right2 = event[1];
+
+    while(indxLft &lt event.left.length && indxRght &lt event.right.length){
+      if(event.left[0] &lt= event.right[0]){
+        resultArray.push(event.left.shift());
+      }
+      else{
+        resultArray.push(event.right.shift());
+      }
+    }
+
+    while(event.left.length){
+      resultArray.push(event.left.shift());
+    }
+    while(event.right.length){
+      resultArray.push(event.right.shift());
+    }
+
+    context.succeed(resultArray);
+  }
+};
+
+HRDivide
+
+  'use strict';
+
+module.exports.handler = function(event, context, cb) {
+  var array =[];
+  var AWS = require('aws-sdk');
+  var lambda = new AWS.Lambda({
+    region: 'us-east-1'
+  });
+
+  for(var i = 0; i &lt 10; i++){
+    array.push(Math.round(Math.random() * 1000));
+  }
+
+  console.log("The initial array is: " + array);
+  var sortedArray = mergeSort(array);
+
+
+  function mergeSort(arr){
+    if(arr.length &lt 2){
+      return arr;
+    }
+
+    var middle = Math.floor(arr.length / 2);
+    var left = arr.slice(0, middle);
+    var right = arr.slice(middle, arr.length);
+
+    var params ={
+      FunctionName: 'HRMergeSort-HRMerge',
+      InvokeArgs: JSON.stringify(left, right)
+    };
+
+    lambda.invokeAsync(params, function(err, data){
+      if(err){
+        console.log(err, err.stack);
+      }
+      else{
+        context.succeed(data.InvokeArgs);
+        console.log("The sorted array is: " + data.InvokeArgs);
+      }
+    })
+  }
+};
+En la documentacion de AWS leimos que hay dos formas de hacer el invoke, ya sea lambda.invoke o lambda.invokeAsync. Quisimos utilizar el primero, pero nos marca que lambda.function no es una funcion, y al utilizar lambda.invokeAsync nos regresa "undefined", pero regresa como status 202, esto quiere decir que si funciona, de acuerdo a la documentacion de AWS.
+
+
+
+4. Benchmark the AWS implementation. 10 points.
+  Aunque no regrese el array en orden, sale este mensaje: 1946126 byte payload is too large for the Event invocation type (limit 131072 bytes)
+
+Pero haciendolo con un arreglo de 10, el tiempo es: 2108.65 ms
+
+100: 5729.52 ms
+
+1000: 1005.24 ms
+
+
+</pre>
+<h2>Tarea 3</h2>
 <pre>
   1. Create a NodeJS script that will do the following:
 • Download and Image from S3.
