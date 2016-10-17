@@ -4,7 +4,11 @@
   "description": "Serverless Lambda function for project: mexicoder-sls",
   "customName": false,
   "customRole": false,
+<<<<<<< HEAD
+  "handler": "multWeatherHernan/handler.handler",
+=======
   "handler": "handler.handler",
+>>>>>>> 7c733b15efe910e0b7f055d5061b20ebd2a65e2d
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},

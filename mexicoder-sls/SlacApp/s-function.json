@@ -1,14 +1,10 @@
 {
-  "name": "weatherTarea",
+  "name": "SlacApp",
   "runtime": "nodejs4.3",
   "description": "Serverless Lambda function for project: mexicoder-sls",
   "customName": false,
   "customRole": false,
-<<<<<<< HEAD
-  "handler": "weatherTarea/handler.handler",
-=======
-  "handler": "handler.handler",
->>>>>>> 7c733b15efe910e0b7f055d5061b20ebd2a65e2d
+  "handler": "SlacApp/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -17,8 +13,8 @@
   },
   "endpoints": [
     {
-      "path": "weatherTarea",
-      "method": "GET",
+      "path": "SlacApp",
+      "method": "POST",
       "type": "AWS",
       "authorizationType": "none",
       "authorizerFunction": false,
@@ -35,10 +31,9 @@
           "statusCode": "200",
           "responseParameters": {},
           "responseModels": {
-            "application/json;charset=UTF-8": "Empty"
           },
           "responseTemplates": {
-            "application/json;charset=UTF-8": ""
+            "application/json": ""
           }
         }
       }
@@ -54,8 +49,4 @@
     "securityGroupIds": [],
     "subnetIds": []
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 7c733b15efe910e0b7f055d5061b20ebd2a65e2d
