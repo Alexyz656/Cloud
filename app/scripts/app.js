@@ -44,11 +44,6 @@ angular
         controller: 'TareasCtrl',
         controllerAs: 'tareas'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
       .otherwise({
         redirectTo: '/'
       });
