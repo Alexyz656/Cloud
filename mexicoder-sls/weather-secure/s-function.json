@@ -1,10 +1,10 @@
 {
-  "name": "multWeatherHernan",
+  "name": "weather-secure",
   "runtime": "nodejs4.3",
   "description": "Serverless Lambda function for project: mexicoder-sls",
   "customName": false,
-  "customRole": false,
-  "handler": "multWeatherHernan/handler.handler",
+  "customRole": "arn:aws:iam::292274580527:role/cc116_lambda",
+  "handler": "weather-secure/handler.handler",
   "timeout": 6,
   "memorySize": 1024,
   "authorizer": {},
@@ -13,7 +13,7 @@
   },
   "endpoints": [
     {
-      "path": "multWeatherHernan",
+      "path": "weather-secure",
       "method": "PUT",
       "type": "AWS",
       "authorizationType": "none",
